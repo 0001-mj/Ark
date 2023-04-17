@@ -1,0 +1,97 @@
+if getgenv().Raider then return getgenv().Raider end
+
+local RunService = game:GetService("RunService")
+local Heartbeat, Stepped, RenderStepped = RunService.Heartbeat, RunService.Stepped, RunService.RenderStepped
+
+getgenv().Raider =
+{
+    SilentAim =
+    {
+        Enable = true,
+        HitChance = 70,
+        SilentAimPart = "Head",
+    },
+
+    AimAssist =
+    {
+        Enable = true,
+        Smoothness = 5,
+        AimAssistPart = "UpperTorso",
+    },
+
+    Resolver = 
+    {
+        WallCheck = true,
+        CurveCheck = true,
+    },
+
+    FOV = 
+    {
+        SilentAim = 
+        {
+            Value = 5,
+            Opacity = 5,
+            Thickness = 1,
+            SidesValue = 0,
+            IsVisible = true,
+            IsCircleFilled = true,
+            Color3FromRGB = Color3.fromRGB(255, 255, 255),
+        },
+
+        AimAssist = 
+        {
+            Value = 5,
+            Opacity = 5,
+            Thickness = 1,
+            SidesValue = 0,
+            IsVisible = true,
+            IsCircleFilled = true,
+            DisableCircleSides = true,
+            Color3FromRGB = Color3.fromRGB(255, 255, 255),
+        },
+    },
+},
+
+local Raider = getgenv().Raider
+
+local RaiderSilent = Raider.SilentAim
+local RaiderAimAssist = Raider.AimAssist
+
+local RaiderFOV = Raider.FOV
+local RaiderSilentFOV = Raider.FOV.SilentAim
+local RaiderAimAssistFOV = Raider.FOV.AimAssist
+
+function UpdateFOV()
+    local Circle = Drawing.new("Circle")
+
+    if not (Circle) then
+        return
+    end
+
+    if RaiderSilent.["Enable"] == true then
+        Circle.Visible = RaiderSilentFOV.["IsVisible"]
+        Circle.Filled = RaiderSilentFOV.["IsCircleFilled"]
+        CIrcle.Thickness = RaiderSilentFOV.["Thickness"]
+        Circle.Transparency = RaiderSilentFOV.["Opacity"]
+        Circle.NumSides = RaiderSilentFOV.["SidesValue"]
+        Circle.Color = RaiderSilentFOV.["Color3FromRGB"]
+        Circle.Position = Vector2.new(game:GetService("UserInputService"):GetMouseLocation().X, game:GetService("UserInputService"):GetMouseLocation().Y)
+
+        return Circle
+    end
+
+    if RaiderAimAssist.["Enable"] == true then
+        Circle.Visible = RaiderAimAssistFOV.["IsVisible"]
+        Circle.Filled = RaiderAimAssistFOV.["IsCircleFilled"]
+        CIrcle.Thickness = RaiderAimAssistFOV.["Thickness"]
+        Circle.Transparency = RaiderAimAssistFOV.["Opacity"]
+        Circle.NumSides = RaiderAimAssistFOV.["SidesValue"]
+        Circle.Color = RaiderAimAssistFOV.["Color3FromRGB"]
+
+        return Circle
+    end
+end
+
+RenderStepped:Connect(function()
+    UpdateFOV()
+end)
